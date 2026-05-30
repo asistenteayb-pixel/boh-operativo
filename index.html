@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
 window.supabase = {};
 window.SUPABASE_URL = '/api';
 window.SUPABASE_ANON_KEY = 'dummy';
-window.API_PROXY_URL = new URL('../api/proxy.php', window.location.href).pathname;
+window.API_PROXY_URL = new URL('api/proxy.php', window.location.href).pathname;
 window._sb = {
     from: function(table) {
         let query = { table: table, select: '*', conditions: [], orders: [], limitVal: null, action: 'select', data: null };
@@ -729,7 +729,13 @@ window._sb = {
                 </div>
             </div>
             <div class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden">
-                <div class="p-4 border-b border-slate-100 bg-slate-50 font-black text-slate-800 flex items-center"><i class="fas fa-users text-slate-400 mr-2 text-lg"></i> Directorio de Personal</div>
+                <div class="p-4 border-b border-slate-100 bg-slate-50 font-black text-slate-800 flex justify-between items-center">
+                    <div><i class="fas fa-users text-slate-400 mr-2 text-lg"></i> Directorio de Personal <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-md ml-2 font-mono">ISO: HR-12</span></div>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-2 text-slate-400 text-xs"></i>
+                        <input type="text" id="busqueda-usuarios" placeholder="Buscar usuario..." class="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs outline-none focus:border-cp-blue w-64" onkeyup="window.smartSearch('busqueda-usuarios', '#tbl-usuarios-list tr', ['td:nth-child(2)', 'td:nth-child(3)', 'td:nth-child(4)', 'td:nth-child(5)'])">
+                    </div>
+                </div>
                 <div class="flex-1 overflow-auto p-2">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
@@ -922,7 +928,16 @@ window._sb = {
     
     <template id="tpl-tabla-reqs">
         <div class="h-full flex flex-col bg-white border border-slate-200 rounded-2xl shadow-sm max-w-7xl mx-auto overflow-hidden">
-            <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center"><h3 class="font-black text-lg text-slate-800" id="tb-tit"><i class="fas fa-database text-cp-blue mr-2"></i> AuditorÃ­a Operativa</h3><span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Trazabilidad Total</span></div>
+            <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <h3 class="font-black text-lg text-slate-800" id="tb-tit"><i class="fas fa-database text-cp-blue mr-2"></i> Auditoría Operativa <span class="bg-slate-200 text-slate-600 text-[10px] px-2 py-0.5 rounded-md ml-2 font-mono">ISO: BOH-01</span></h3>
+                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider hidden sm:inline">Trazabilidad Total</span>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-2 text-slate-400 text-xs"></i>
+                    <input type="text" id="busqueda-auditoria" placeholder="Filtrar radicados, áreas, etc..." class="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs outline-none focus:border-cp-blue w-64 shadow-sm" onkeyup="window.smartSearch('busqueda-auditoria', '#tabla-historico tr', ['.radicado', '.solicita', '.area', '.estado'])">
+                </div>
+            </div>
             <div class="flex-1 overflow-x-auto overflow-y-auto p-2">
                 <table class="w-full text-left text-xs">
                     <thead class="bg-slate-50 text-slate-500 border-b border-slate-200 sticky top-0 z-10">
@@ -2256,11 +2271,24 @@ window._sb = {
             }
         };
 
+        // Búsqueda inteligente normalizada
+        window.normalizeText = (text) => text ? text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
+        window.smartSearch = function(inputId, rowSelector, textSelectors) {
+            const term = window.normalizeText(document.getElementById(inputId).value);
+            document.querySelectorAll(rowSelector).forEach(row => {
+                let match = false;
+                textSelectors.forEach(sel => {
+                    const el = sel === ':self' ? row : row.querySelector(sel);
+                    if (el && window.normalizeText(el.innerText).includes(term)) match = true;
+                });
+                row.style.display = match ? '' : 'none';
+            });
+        };
         window.filtrarTablaCatalogo = function() {
-            const term = document.getElementById('busqueda-catalogo').value.toLowerCase();
+            const term = window.normalizeText(document.getElementById('busqueda-catalogo').value);
             document.querySelectorAll('.cat-row-admin').forEach(row => {
-                const nom = row.querySelector('.cat-nom').innerText.toLowerCase();
-                const cod = row.querySelector('.cat-cod').innerText.toLowerCase();
+                const nom = window.normalizeText(row.querySelector('.cat-nom').innerText);
+                const cod = window.normalizeText(row.querySelector('.cat-cod').innerText);
                 row.style.display = (nom.includes(term) || cod.includes(term)) ? '' : 'none';
             });
         };
@@ -2365,10 +2393,10 @@ window._sb = {
         };
 
         window.filtrarRecetario = function() {
-            const term = document.getElementById('busqueda-receta').value.toLowerCase();
+            const term = window.normalizeText(document.getElementById('busqueda-receta').value);
             const cards = document.getElementById('grid-recetas').children;
             for(let i=0; i<cards.length; i++) {
-                const title = cards[i].querySelector('h3').innerText.toLowerCase();
+                const title = window.normalizeText(cards[i].querySelector('h3').innerText);
                 cards[i].style.display = title.includes(term) ? '' : 'none';
             }
         };
@@ -2540,7 +2568,7 @@ window._sb = {
             } else { datos.forEach(i => tb.innerHTML += rnd(i)); } 
         };
 
-        window.filterFormDetalle = function() { const term = document.getElementById('inv-search-detalle').value.toLowerCase(); document.querySelectorAll('.form-row').forEach(row => { row.style.display = row.querySelector('.fn-nom').innerText.toLowerCase().includes(term) ? '' : 'none'; }); };
+        window.filterFormDetalle = function() { const term = window.normalizeText(document.getElementById('inv-search-detalle').value); document.querySelectorAll('.form-row').forEach(row => { row.style.display = window.normalizeText(row.querySelector('.fn-nom').innerText).includes(term) ? '' : 'none'; }); };
         window.imprimirPDF = function() { window.print(); };
 
         window.exportarExcelFormulario = function() { 
@@ -3425,8 +3453,8 @@ window._sb = {
         };
 
         window.filtrarRecetasAdminList = function() {
-            const term = document.getElementById('inp-receta-search').value.toLowerCase();
-            const filtered = window.recetasListCache.filter(r => r.nombre.toLowerCase().includes(term) || r.servicio.toLowerCase().includes(term));
+            const term = window.normalizeText(document.getElementById('inp-receta-search').value);
+            const filtered = window.recetasListCache.filter(r => window.normalizeText(r.nombre).includes(term) || window.normalizeText(r.servicio).includes(term));
             window.renderRecetasAdminListUI(filtered);
         };
 
