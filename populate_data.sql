@@ -1,0 +1,8 @@
+-- Archivo legado reemplazado.
+-- Para cargar la base local completa use:
+--   ./setup_local_mysql.sh
+--
+-- El cargue real se encuentra separado en:
+--   seed_operational_data.sql
+--   seed_excel_catalog.sql
+--   seed_menu_programado.sql
