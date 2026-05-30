@@ -245,34 +245,34 @@ window._sb = {
     <!-- ================= TEMPLATES ================= -->
 
     <!-- DASHBOARD -->
-    <?php include '../views/templates/dashboard.php'; ?>
+    <?php include __DIR__ . '/../views/templates/dashboard.php'; ?>
 
     <!-- GESTOR DE CATÃLOGO -->
-    <?php include '../views/templates/admin-catalogo.php'; ?>
+    <?php include __DIR__ . '/../views/templates/admin-catalogo.php'; ?>
 
     <!-- RECETARIO -->
-    <?php include '../views/templates/recetario.php'; ?>
+    <?php include __DIR__ . '/../views/templates/recetario.php'; ?>
 
-    <?php include '../views/templates/admin-config.php'; ?>
+    <?php include __DIR__ . '/../views/templates/admin-config.php'; ?>
 
-    <?php include '../views/templates/admin-users.php'; ?>
+    <?php include __DIR__ . '/../views/templates/admin-users.php'; ?>
 
     <!-- FORMULARIOS FAYB/FRUVER EN CAJAS VISUALES -->
-    <?php include '../views/templates/inventario.php'; ?>
+    <?php include __DIR__ . '/../views/templates/inventario.php'; ?>
 
-    <?php include '../views/templates/req-nueva.php'; ?>
+    <?php include __DIR__ . '/../views/templates/req-nueva.php'; ?>
 
-    <?php include '../views/templates/bodega.php'; ?>
+    <?php include __DIR__ . '/../views/templates/bodega.php'; ?>
     
-    <?php include '../views/templates/tabla-reqs.php'; ?>
+    <?php include __DIR__ . '/../views/templates/tabla-reqs.php'; ?>
 
-    <?php include '../views/templates/req-mis.php'; ?>
+    <?php include __DIR__ . '/../views/templates/req-mis.php'; ?>
 
-    <?php include '../views/templates/menu-semanal.php'; ?>
+    <?php include __DIR__ . '/../views/templates/menu-semanal.php'; ?>
 
-    <?php include '../views/templates/turnos.php'; ?>
+    <?php include __DIR__ . '/../views/templates/turnos.php'; ?>
 
-    <?php include '../views/templates/kiosk.php'; ?>
+    <?php include __DIR__ . '/../views/templates/kiosk.php'; ?>
 
     <!-- LOGICA JAVASCRIPT GLOBAL -->
     <script>
